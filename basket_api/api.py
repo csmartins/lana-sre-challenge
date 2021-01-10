@@ -47,6 +47,29 @@ def validate_items(items: dict):
     
     return True
 
+def calculate_amount(items: dict):
+    prices = {'pen': 5.00, 'tshirt': 20.00, 'mug': 7.50}
+    basket_items = dict()
+    amount = 0.0
+
+    for k,v in items.items():
+        item_lower = k.lower()
+        if item_lower == 'pen' and v>=2:
+            if v%2 is 0:
+                amount += v*(prices[item_lower]/2)
+            else:
+                amount += int(v/2)*(prices[item_lower])
+                amount += prices[item_lower]
+        elif item_lower == 'tshirt' and v >= 3:
+            amount += v*(prices[item_lower]*0.75)
+        else:
+            amount += v*prices[item_lower]
+        
+        basket_items[item_lower] = v
+    
+    basket = {'items': basket_items, 'total_amount': amount}
+    return basket
+
 """
 Items is a dict, the keys are the item code and the values are the quantity
 """
@@ -56,8 +79,8 @@ def add_to_basket(basket_id):
     if basket:
         items = request.get_json()['items']
         if validate_items(items):
-            
-            basket_controler.add_to_basket(basket_id, items)
+            basket = calculate_amount(items)
+            basket_controler.add_to_basket(basket_id, basket)
             basket = basket_controler.get_basket(basket_id)
             return json.dumps(basket)
         else:
