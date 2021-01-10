@@ -10,7 +10,7 @@ class BasketControler:
         self.redis_connection = self.redis_setup(self.REDIS_CONN_STRING)
 
     def redis_setup(self, redis_conn_string):
-        (host, port, password) = redis_conn_string.split(';')
+        (host, port, password) = redis_conn_string.split(',')
         rconn = Redis(
                     host=host,
                     port=port)
