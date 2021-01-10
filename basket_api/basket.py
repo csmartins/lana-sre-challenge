@@ -44,7 +44,7 @@ class BasketControler:
             return None
 
     def add_to_basket(self, basket_id, items):
-        pass
+        self.redis_connection.set(basket_id, json.dumps(items))
 
     def delete_basket(self, basket_id):
-        pass
+        return self.redis_connection.delete(basket_id)
