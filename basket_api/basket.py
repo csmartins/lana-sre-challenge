@@ -13,7 +13,8 @@ class BasketControler:
         (host, port, password) = redis_conn_string.split(',')
         rconn = Redis(
                     host=host,
-                    port=port)
+                    port=port,
+                    decode_responses=True)
                     # password=password)
         return rconn
 
@@ -24,13 +25,23 @@ class BasketControler:
         return basket_id
 
     def get_basket(self, basket_id):
-        pass
+        return self.redis_connection.get(basket_id)
 
     def get_basket_total(self, basket_id):
-        pass
+        basket = self.redis_connection.get(basket_id)
+        if basket:
+            basket = json.loads(basket)
+            return {'total_amount': basket['total_amount']}
+        else:
+            return None
 
     def get_basket_items(self, basket_id):
-        pass
+        basket = self.redis_connection.get(basket_id)
+        if basket:
+            basket = json.loads(basket)
+            return {'items': basket['items']}
+        else:
+            return None
 
     def add_to_basket(self, basket_id, items):
         pass
