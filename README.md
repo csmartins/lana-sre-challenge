@@ -63,3 +63,50 @@ Examples:
 - Curl examples to test the endpoints
 
 ## The Solution
+
+To run it localy one must have installed docker and docker-compose. Build and run with the following commands:
+
+```
+sudo docker build -t basket_api .
+sudo docker-compose up
+```
+
+With everything up we can send requests to our api. It will store buckets information in a redis instance, that the compose also got up. Firts lets create a basket, I used Postman to send those requests and get a pretty response:
+
+```
+GET http://127.0.0.1:5000/basket/new
+```
+
+That will return us a basket ID, we will use that to get basket info and add some items to the basket. For the sake of explanation the example will use 'random-id' as a basket id
+
+```
+GET http://127.0.0.1:5000/basket/random-id
+```
+
+As the basket is recently created, the response should be somewhat like this:
+
+```
+"{\"items\": [], \"total_amount\": 0}"
+```
+
+Now, lets add some items:
+
+```
+PUT http://127.0.0.1:5000/basket/random-id/add
+
+Payload:
+{
+    "items":
+    {
+        "PEN": 3,
+        "TSHIRT": 3,
+        "MUG": 1
+    }
+}
+```
+
+The API will calculate the amount based on the discount rules specified on the problem description:
+
+```
+"{\"items\": {\"pen\": 3, \"tshirt\": 3, \"mug\": 1}, \"total_amount\": 62.5}"
+```
